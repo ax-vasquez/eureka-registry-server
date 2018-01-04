@@ -1,0 +1,49 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.9.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'maven'
+apply plugin: 'idea'	// If on Intellij, run 'gradle idea' first and on each dependency change
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: "io.spring.dependency-management"
+
+group = 'io.happium'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-netflix:1.4.1.BUILD-SNAPSHOT'
+    }
+}
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://repo.spring.io/libs-snapshot'
+    }
+}
+
+
+dependencies {
+    compile('org.projectlombok:lombok:1.16.16')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.cloud:spring-cloud-netflix-eureka-server:1.4.0.RELEASE')
+    compile('org.springframework.cloud:spring-cloud-netflix-eureka-client:1.4.0.RELEASE')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+springBoot {
+    mainClass = "io.happium.eureka_registry_server.Application"
+}
